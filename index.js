@@ -4,6 +4,9 @@ import {
 import {
     ChatGoogleGenerativeAI
 } from "@langchain/google-genai";
+import {
+    PromptTemplate
+} from "@langchain/core/prompts";
 
 config();
 
@@ -12,6 +15,10 @@ const model = new ChatGoogleGenerativeAI({
     apiKey: process.env.GEMINI_API_KEY,
 });
 
-model.invoke("Who are you?").then(response => {
-    console.log(response.content)
-}); 
+const promptTemplate = PromptTemplate.fromTemplate(`explain {topic} in very simple way like ELI5, make sure to include the core concept and avoid unnecessary jargon. make the answer as concise as possible.`);
+
+promptTemplate.pipe(model).invoke({
+    topic: "express"
+}).then(response => {
+    console.log(response)
+})
